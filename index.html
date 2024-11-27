@@ -124,24 +124,33 @@
         return;
       }
 
-      // Proveer recomendaciones y una estructura más motivacional
-      const recommendations = [
-        "Recuerda que cada paso te acerca un poco más a tu meta.",
-        "Divide tus objetivos en pequeñas victorias para mantenerte motivado.",
-        "No olvides celebrar cada logro, por pequeño que sea."
-      ];
+      // Analizar y sugerir mejoras a los pasos ingresados
+      let feedback = '';
+      const improvedSteps = steps.map((step, index) => {
+        let recommendation = '';
+        if (step.trim() === '') {
+          recommendation = 'Este paso está vacío, intenta ser más específico.';
+        } else if (step.length < 10) {
+          recommendation = 'Este paso parece muy corto. Considera agregar más detalles para hacerlo más concreto.';
+        } else if (!step.includes('cómo') && !step.includes('cuándo')) {
+          recommendation = 'Asegúrate de que cada paso tenga una acción específica y concreta. Por ejemplo, "Llamar a 5 posibles clientes cada semana" es mejor que "Llamar clientes".';
+        }
 
-      let dailySteps = steps.map((step, index) => {
-        return `<li>${index + 1}. ${step} - <em>Sugerencia:</em> ${recommendations[index % recommendations.length]}</li>`;
+        if (recommendation) {
+          feedback += `<p><strong>Corrección para el paso ${index + 1}:</strong> ${recommendation}</p>`;
+        }
+        
+        return `<li>${index + 1}. ${step}</li>`;
       }).join('');
 
-      // Resultado del plan con una motivación adicional
+      // Mostrar resultado del plan con sugerencias adicionales
       document.getElementById('result').innerHTML = `
         <h3>Tu plan hacia el éxito:</h3>
         <p><strong>Meta:</strong> ${goal}</p>
         <p><strong>Plazo:</strong> ${deadline} días</p>
-        <ol>${dailySteps}</ol>
-        <p><strong>Consejo final:</strong> Mantén la vista en tu objetivo y sigue avanzando, incluso cuando los resultados no sean inmediatos. ¡Tú puedes lograrlo!</p>
+        <ol>${improvedSteps}</ol>
+        ${feedback}
+        <p><strong>Consejo final:</strong> Recuerda que un plan claro y detallado es la clave para lograr cualquier meta. Si algún paso parece confuso, tómate un momento para hacerlo más específico y medible. ¡Tú puedes lograrlo!</p>
       `;
     }
   </script>
