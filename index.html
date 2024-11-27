@@ -116,23 +116,34 @@
   <script>
     function generatePlan() {
       const goal = document.getElementById('goal').value;
-      const steps = document.getElementById('steps').value;
+      const steps = document.getElementById('steps').value.split('\n');
       const deadline = parseInt(document.getElementById('deadline').value);
 
-      if (!goal || !steps || !deadline) {
+      if (!goal || !steps.length || !deadline) {
         document.getElementById('result').innerHTML = '<span style="color: red;">Por favor, completa todos los campos.</span>';
         return;
       }
 
-      const dailySteps = steps.split('\n').map((step, index) => `<li>${index + 1}. ${step}</li>`).join('');
+      // Proveer recomendaciones y una estructura más motivacional
+      const recommendations = [
+        "Recuerda que cada paso te acerca un poco más a tu meta.",
+        "Divide tus objetivos en pequeñas victorias para mantenerte motivado.",
+        "No olvides celebrar cada logro, por pequeño que sea."
+      ];
+
+      let dailySteps = steps.map((step, index) => {
+        return `<li>${index + 1}. ${step} - <em>Sugerencia:</em> ${recommendations[index % recommendations.length]}</li>`;
+      }).join('');
+
+      // Resultado del plan con una motivación adicional
       document.getElementById('result').innerHTML = `
         <h3>Tu plan hacia el éxito:</h3>
         <p><strong>Meta:</strong> ${goal}</p>
         <p><strong>Plazo:</strong> ${deadline} días</p>
         <ol>${dailySteps}</ol>
+        <p><strong>Consejo final:</strong> Mantén la vista en tu objetivo y sigue avanzando, incluso cuando los resultados no sean inmediatos. ¡Tú puedes lograrlo!</p>
       `;
     }
   </script>
 </body>
 </html>
-
